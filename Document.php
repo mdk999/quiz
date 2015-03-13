@@ -25,7 +25,7 @@ class Document {
         
         if($row = $this->db->query("SELECT * FROM document WHERE name = '{$this->name}' LIMIT 1")){
           
-          return $this->db->row[2]; // third column in a row
+          return $row[2]; // third column in a row
         }
         else return;
         
@@ -34,7 +34,7 @@ class Document {
 
     public function getContent() {
 
-        if($row = $db->query('SELECT * FROM document WHERE name = "' . $this->name . '" LIMIT 1')){
+        if($row = $this->db->query('SELECT * FROM document WHERE name = "' . $this->name . '" LIMIT 1')){
             
           return $row[5]; // sixth column in a row
           

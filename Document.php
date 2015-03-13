@@ -4,23 +4,42 @@ class Document {
     public $user;
 
     public $name;
+    
+    private $db;
 
-    public function init($name, User $user) {
-        assert(strlen($name) > 5);
+    public function __construct() {
+        
+        $this->db = Database::getInstance(); 
+    }
+    
+    public function init($name, User $user){
+        
+        assert("strlen({$name}) > 5");
+        
         $this->user = $user;
-        $this->name = $name;
+        
+        $this->name = $name;  
     }
 
     public function getTitle() {
-        $db = Database::getInstance();
-        $row = $db->query('SELECT * FROM document WHERE name = "' . $this->name . '" LIMIT 1');
-        return $row[3]; // third column in a row
+        
+        if($row = $this->db->query("SELECT * FROM document WHERE name = '{$this->name}' LIMIT 1")){
+          
+          return $this->db->row[2]; // third column in a row
+        }
+        else return;
+        
+        
     }
 
     public function getContent() {
-        $db = Database::getInstance();
-        $row = $db->query('SELECT * FROM document WHERE name = "' . $this->name . '" LIMIT 1');
-        return $row[6]; // sixth column in a row
+
+        if($row = $db->query('SELECT * FROM document WHERE name = "' . $this->name . '" LIMIT 1')){
+            
+          return $row[5]; // sixth column in a row
+          
+        }
+        else return;
     }
 
     public static function getAllDocuments() {
@@ -31,17 +50,30 @@ class Document {
 
 class User {
 
+    public $doc;
+    
+    public function __construct(){
+        
+        $this->doc = new Document();
+        
+    }
     public function makeNewDocument($name) {
-        $doc = new Document();
-        $doc->init($name, $this);
-        return $doc;
+        
+        if($doc->init($name, $this)){
+            
+            return $doc;
+            
+        }
+        else return;
     }
 
     public function getMyDocuments() {
+        
         $list = array();
+        
         foreach (Document::getAllDocuments() as $doc) {
-            if ($doc->user == $this)
-                $list[] = $doc;
+            
+            if ($doc->user == $this) $list[] = $doc;
         }
         return $list;
     }

@@ -34,7 +34,7 @@ class Document {
 
     public function getContent() {
 
-        if($row = $this->db->query('SELECT * FROM document WHERE name = "' . $this->name . '" LIMIT 1')){
+        if($row = $this->db->query("SELECT * FROM document WHERE name = '{$this->name}' LIMIT 1")){
             
           return $row[5]; // sixth column in a row
           
@@ -59,7 +59,7 @@ class User {
     }
     public function makeNewDocument($name) {
         
-        if($doc->init($name, $this)){
+        if($this->doc->init($name, $this)){
             
             return $doc;
             
@@ -71,7 +71,7 @@ class User {
         
         $list = array();
         
-        foreach (Document::getAllDocuments() as $doc) {
+        foreach ($this->doc as $doc) {
             
             if ($doc->user == $this) $list[] = $doc;
         }
